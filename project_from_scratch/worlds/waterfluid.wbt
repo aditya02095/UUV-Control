@@ -1,0 +1,161 @@
+#VRML_SIM R2025a utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/floors/protos/RectangleArena.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/appearances/protos/ThreadMetalPlate.proto"
+
+WorldInfo {
+  gravity 0
+  basicTimeStep 16
+  coordinateSystem "NUE"
+}
+Viewpoint {
+  orientation -0.43507082831916777 -0.5704032243018041 -0.696673191713144 2.0393330800452425
+  position 11.41740186624446 14.551194671220898 39.39329288572488
+}
+TexturedBackground {
+  texture "empty_office"
+}
+DEF TANK RectangleArena {
+  translation 0 0.5 -100
+  floorSize 200 160
+  floorAppearance ThreadMetalPlate {
+  }
+  wallHeight 200
+  wallAppearance PBRAppearance {
+    transparency 0.95
+    emissiveColor 0.8 0.8 0.8
+  }
+}
+DEF STILL_WATER Fluid {
+  children [
+    DEF S Shape {
+      appearance DEF WATER_APPEARANCE PBRAppearance {
+        baseColor 0 0.501961 1
+        transparency 0.8
+        roughness 1.1102230246251565e-16
+        metalness 0
+      }
+      geometry Box {
+        size 200 150 200
+      }
+    }
+  ]
+  boundingObject Pose {
+    children [
+      Box {
+        size 200 150 200
+      }
+    ]
+  }
+}
+DEF DRONE_UUV Robot {
+  translation 1.548635132842349e-16 1 88.30446625192333
+  rotation -0.9941260536348697 0.052633811340637576 0.09456781370063631 8.019442711646358e-17
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.2 0.2 0.25
+        roughness 0.4
+        metalness 0.1
+      }
+      geometry Cylinder {
+        height 5
+      }
+    }
+    GPS {
+    }
+    InertialUnit {
+      name "imu"
+    }
+    DEF MOTOR_1 Propeller {
+      shaftAxis 0 0 1
+      centerOfThrust 0.4 0 1.4
+      torqueConstants 0.01 0
+      device RotationalMotor {
+        name "motor_1"
+        maxVelocity 20
+        maxTorque 5
+      }
+    }
+    DEF MOTOR_2 Propeller {
+      shaftAxis 0 0 1
+      centerOfThrust -0.4 0 1.4
+      torqueConstants -0.01 0
+      device RotationalMotor {
+        name "motor_2"
+        maxVelocity 20
+        maxTorque 5
+      }
+    }
+    DEF MOTOR_3 Propeller {
+      shaftAxis 0 0 1
+      centerOfThrust 0.8 0 1.4
+      device RotationalMotor {
+        name "motor_3"
+        maxVelocity 20
+        maxTorque 5
+      }
+    }
+    Pose {
+      translation 0.8 0 1.4
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.2 0.2 0.8
+            roughness 0.3
+            metalness 0.6
+          }
+          geometry Cylinder {
+            height 0.3
+            radius 0.08
+            subdivision 16
+          }
+        }
+      ]
+    }
+    DEF MOTOR_4 Propeller {
+      shaftAxis 0 0 1
+      centerOfThrust -0.8 0 1.4
+      device RotationalMotor {
+        name "motor_4"
+        maxVelocity 20
+        maxTorque 5
+      }
+    }
+    Pose {
+      translation -0.8 0 1.4
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.2 0.2 0.8
+            roughness 0.3
+            metalness 0.6
+          }
+          geometry Cylinder {
+            height 0.3
+            radius 0.08
+            subdivision 16
+          }
+        }
+      ]
+    }
+  ]
+  boundingObject Pose {
+    rotation 0 0 1 1.5708
+    children [
+      Cylinder {
+        height 5
+      }
+    ]
+  }
+  physics Physics {
+    mass 60
+    damping Damping {
+      angular 0.5
+    }
+  }
+  controller "<extern>"
+  linearVelocity -5.14408918089861e-22 -9.213366528567178e-21 -0.0001152941692243308
+  angularVelocity 6.331485575164736e-24 -4.274589533422058e-24 -1.1515528564623447e-39
+}

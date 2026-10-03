@@ -1,0 +1,203 @@
+#VRML_SIM R2025a utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/appearances/protos/BrushedAluminium.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/appearances/protos/Copper.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/appearances/protos/CorrugatedPvc.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/geometries/protos/Extrusion.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/appearances/protos/GlossyPaint.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/factory/pipes/protos/LJoint.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/appearances/protos/MetalPipePaint.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/floors/protos/RectangleArena.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/appearances/protos/Rubber.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/solids/protos/SolidPipe.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/solids/protos/SolidRoundedBox.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/factory/pipes/protos/TJoint.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/appearances/protos/ThreadMetalPlate.proto"
+
+WorldInfo {
+  gravity 0 -9.81 0
+  basicTimeStep 16
+  coordinateSystem "NUE"
+}
+Viewpoint {
+  orientation 0.10753267536789346 -0.7142890383601255 -0.6915402326739859 3.1073365184041943
+  position 44.58835151655549 7.748617026211778 6.76626272054276
+}
+TexturedBackground {
+  texture "empty_office"
+}
+DEF TANK RectangleArena {
+  translation 0 0.5 -10
+  floorSize 20 16
+  floorAppearance ThreadMetalPlate {
+  }
+  wallHeight 20
+  wallAppearance PBRAppearance {
+    transparency 0.95
+    emissiveColor 0.8 0.8 0.8
+  }
+}
+DEF STILL_WATER Fluid {
+  children [
+    DEF S Shape {
+      appearance DEF WATER_APPEARANCE PBRAppearance {
+        baseColor 0 0.501961 1
+        transparency 0.8
+        roughness 1.1102230246251565e-16
+        metalness 0
+      }
+      geometry Box {
+        size 20 15 20
+      }
+    }
+  ]
+  boundingObject Pose {
+    children [
+      Box {
+        size 20 15 20
+      }
+    ]
+  }
+}
+
+
+DEF TORPEDO_UUV Robot {
+  translation 0 1 0
+  name "TORPEDO_UUV"
+
+  children [
+
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.15 0.15 0.18
+        roughness 0.35
+        metalness 0.2
+      }
+      geometry Cylinder {
+        radius 0.18
+        height 1.0
+        subdivision 48
+      }
+    }
+
+    DEF HELIX_FAST Solid {
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0 0 0
+            roughness 0.3
+          }
+          geometry Cylinder {
+            height 0.01
+            radius 0.12
+          }
+        }
+      ]
+    }
+
+    DEF HELIX_SLOW Solid {
+      children [
+        Transform {
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0.05 0.05 0.05
+              }
+              geometry Box {
+                size 0.12 0.02 0.005
+              }
+            }
+            Transform {
+              rotation 0 0 1 1.5708
+              children [
+                Shape {
+                  appearance PBRAppearance {
+                    baseColor 0.05 0.05 0.05
+                  }
+                  geometry Box {
+                    size 0.12 0.02 0.005
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+
+    DEF MOTOR_FL Propeller {
+      shaftAxis 1 0 0
+      centerOfThrust 0.5 0.15 0.15
+      fastHelixThreshold 1.0
+      device RotationalMotor {
+        name "motor_fl"
+        maxVelocity 60
+        maxTorque 5
+      }
+      fastHelix USE HELIX_FAST
+      slowHelix USE HELIX_SLOW
+    }
+
+    DEF MOTOR_FR Propeller {
+      shaftAxis -1 0 0
+      centerOfThrust 0.5 0.15 -0.15
+      fastHelixThreshold 1.0
+      device RotationalMotor {
+        name "motor_fr"
+        maxVelocity 60
+        maxTorque 5
+      }
+      fastHelix USE HELIX_FAST
+      slowHelix USE HELIX_SLOW
+    }
+
+    DEF MOTOR_RL Propeller {
+      shaftAxis 1 0 0
+      centerOfThrust 0.5 -0.15 0.15
+      fastHelixThreshold 1.0
+      device RotationalMotor {
+        name "motor_rl"
+        maxVelocity 60
+        maxTorque 5
+      }
+      fastHelix USE HELIX_FAST
+      slowHelix USE HELIX_SLOW
+    }
+
+    DEF MOTOR_RR Propeller {
+      shaftAxis -1 0 0
+      centerOfThrust 0.5 -0.15 -0.15
+      fastHelixThreshold 1.0
+      device RotationalMotor {
+        name "motor_rr"
+        maxVelocity 60
+        maxTorque 5
+      }
+      fastHelix USE HELIX_FAST
+      slowHelix USE HELIX_SLOW
+    }
+
+  ]
+
+  boundingObject Cylinder {
+    radius 0.18
+    height 1.0
+  }
+
+  immersionProperties [
+    ImmersionProperties {
+      fluidName "STILL_WATER"
+      dragForceCoefficients 0.4 0.4 0.2
+      dragTorqueCoefficients 0.03 0.03 0.03
+      viscousResistanceTorqueCoefficient 0.03
+    }
+  ]
+
+  physics Physics {
+    density 500
+    centerOfMass 0 0 0
+  }
+
+  controller "my_controller"
+}
